@@ -25,10 +25,7 @@ pipeline {
         }
 
         stage('Build') {
-            when  {
-        expression {
-            env.GIT_BRANCH?.contains('main')
-        }
+            when { branch 'main' }
             steps {
                 withCredentials([
                     string(credentialsId: 'app-version',
