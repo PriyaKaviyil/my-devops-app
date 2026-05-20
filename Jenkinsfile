@@ -33,9 +33,12 @@ pipeline {
 
             steps {
                 withCredentials([
-                    string(credentialsId: 'app-version-creds',
-                           variable: 'APP_VERSION')
-                ]) {
+            usernamePassword(
+                credentialsId: 'app-version-creds',
+                usernameVariable: 'APP_USER',
+                passwordVariable: 'APP_VERSION'
+            )
+        ]) {
                     sh """
                         echo "Building $APP_VERSION"
                         npm ci
