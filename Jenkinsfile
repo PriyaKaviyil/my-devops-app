@@ -33,14 +33,11 @@ pipeline {
         }
 
         stage('Build') {
-            when {
-                branch 'main'
-            }
-
-            steps {
-                echo 'Building app...'
-            }
+                when {
+        expression {
+            env.BRANCH_NAME == 'main'
         }
+    }
 
         stage('Report') {
             steps {
