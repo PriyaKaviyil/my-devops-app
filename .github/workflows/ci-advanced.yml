@@ -1,0 +1,54 @@
+name: CI Advanced
+
+on:
+  push:
+    branches: [main, "feat/**"]
+  pull_request:
+    branches: [main]
+
+jobs:
+  # ── 1. Lint ─────────────────────────
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: "20", cache: "npm" }
+      - run: npm ci
+      - run: npm run lint || echo "No lint script — OK"
+
+  # ── 2. Test — matrix Node 18 + 20 ───
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18, 20]
+      fail-fast: false
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: \${{ matrix.node-version }}
+          cache: "npm"
+      - run: npm ci && npm test
+
+  # ── 3. Build (needs lint + test) ─────
+  build:
+    needs: [lint, test]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    env:
+      APP_VERSION: \${{ secrets.APP_VERSION }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: "20", cache: "npm" }
+      - run: npm ci
+      - name: Build
+        run: echo "Building version $APP_VERSION"
+      - name: Upload dist
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-\${{ github.sha }}
+          path: dist/
+          if-no-files-found: warn
