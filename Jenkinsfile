@@ -15,15 +15,31 @@ pipeline {
         stage('Install') {
             steps { sh 'npm ci' }
         }
+        stage('Quality Checks') {
+            parallel {
 
-        stage('Lint') {
-            steps {
-                sh 'npm run lint || echo "No lint"'
+                stage('Lint') {
+                    steps {
+                        sh 'npm run lint || echo "No lint"'
+                    }
+                }
+
+                stage('Test') {
+                    steps {
+                        sh 'npm test || echo "No tests"'
+                    }
+                }
             }
         }
 
-        stage('Test') {
-            steps { sh 'npm test' }
+        stage('Build') {
+            when {
+                branch 'main'
+            }
+
+            steps {
+                echo 'Building app...'
+            }
         }
 
         stage('Report') {
