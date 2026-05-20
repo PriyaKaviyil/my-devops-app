@@ -52,3 +52,4 @@ pipeline {
         failure { echo 'Build failed — check logs' }
     }
 }
+}
