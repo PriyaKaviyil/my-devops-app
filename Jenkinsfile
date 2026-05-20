@@ -39,10 +39,10 @@ pipeline {
                 passwordVariable: 'APP_VERSION'
             )
         ]) {
-                    sh """
+                    sh '''
                         echo "Building $APP_VERSION"
                         npm ci
-                    """
+                    '''
                 }
             }
         }
