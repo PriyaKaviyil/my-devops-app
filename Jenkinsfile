@@ -1,20 +1,28 @@
 pipeline {
     agent any
 
-    tools { nodejs 'NodeJS-20' }
+    tools {
+        nodejs 'NodeJS-20'
+    }
 
     triggers {
         githubPush()
     }
 
     stages {
+
         stage('Checkout') {
-            steps { checkout scm }
+            steps {
+                checkout scm
+            }
         }
 
         stage('Install') {
-            steps { sh 'npm ci' }
+            steps {
+                sh 'npm ci'
+            }
         }
+
         stage('Quality Checks') {
             parallel {
 
@@ -33,23 +41,35 @@ pipeline {
         }
 
         stage('Build') {
-                when {
-        expression {
-            env.BRANCH_NAME == 'main'
+            when {
+                expression {
+                    env.BRANCH_NAME == 'main'
+                }
+            }
+
+            steps {
+                echo 'Building app...'
+            }
         }
-    }
 
         stage('Report') {
             steps {
-                echo "✅ CI passed"
+                echo '✅ CI passed'
             }
         }
     }
 
     post {
-        always  { echo 'Pipeline complete' }
-        success { echo 'All green!' }
-        failure { echo 'Build failed — check logs' }
+        always {
+            echo 'Pipeline complete'
+        }
+
+        success {
+            echo 'All green!'
+        }
+
+        failure {
+            echo 'Build failed — check logs'
+        }
     }
-}
 }
