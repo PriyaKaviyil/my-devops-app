@@ -33,7 +33,7 @@ pipeline {
 
             steps {
                 withCredentials([
-                    string(credentialsId: 'app-version',
+                    string(credentialsId: 'app-version-creds',
                            variable: 'APP_VERSION')
                 ]) {
                     sh """
