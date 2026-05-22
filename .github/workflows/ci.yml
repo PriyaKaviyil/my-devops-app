@@ -27,7 +27,14 @@ jobs:
         run: npm run lint || echo "No lint script"
 
       - name: Test
-        run: npm test
+        run: npm test -- --coverage
+
+      - name: Upload coverage
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-\${{ github.sha }}
+          path: coverage/
 
       - name: Print success
         run: echo "✅ CI passed on $(date)"

@@ -4,7 +4,7 @@
   "description": "DevOps 35-day course app",
   "main": "index.js",
   "scripts": {
-    "test": "echo 'Tests passed' && exit 0",
+    "test": "jest --coverage",
     "prepare": "husky",
     "lint": "eslint . || true"
   },
@@ -25,6 +25,8 @@
     "@commitlint/config-conventional": "^21.0.1",
     "eslint": "^8.57.1",
     "husky": "^9.1.7",
+    "jest": "^30.4.2",
+    "jest-junit": "^17.0.0",
     "lint-staged": "^17.0.4",
     "prettier": "^3.8.3"
   }
