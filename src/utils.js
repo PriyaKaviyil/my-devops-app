@@ -8,5 +8,8 @@ function divide(a, b) {
 function multiply(a, b) { return a * b; }
 
 function isEven(n) { return n % 2 === 0; }
+function secret() {
+  return 'untested';
+}
 
 module.exports = { add, divide, multiply, isEven };
