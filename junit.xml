@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="jest tests" tests="7" failures="0" errors="0" time="1.251">
+  <testsuite name="add" errors="0" failures="0" skipped="0" timestamp="2026-05-22T12:01:03" time="1.066" tests="7">
+    <testcase classname="add adds two numbers" name="add adds two numbers" time="0.003">
+    </testcase>
+    <testcase classname="add handles negatives" name="add handles negatives" time="0.001">
+    </testcase>
+    <testcase classname="divide divides correctly" name="divide divides correctly" time="0">
+    </testcase>
+    <testcase classname="divide throws on zero" name="divide throws on zero" time="0.011">
+    </testcase>
+    <testcase classname="multiply multiplies" name="multiply multiplies" time="0.001">
+    </testcase>
+    <testcase classname="isEven even number" name="isEven even number" time="0.001">
+    </testcase>
+    <testcase classname="isEven odd number" name="isEven odd number" time="0">
+    </testcase>
+  </testsuite>
+</testsuites>
