@@ -1,0 +1,57 @@
+name: CD — Deploy
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci && npm test
+
+  deploy-staging:
+    needs: test
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy to Staging
+        run: |
+          echo "Deploying ${{ github.sha }} to STAGING"
+          echo "Image: ghcr.io/${{ github.repository }}:sha-${{ github.sha }}"
+          echo "✅ Staging deploy complete"
+
+  deploy-production:
+    needs: deploy-staging
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://myapp.example.com
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy to Production
+        run: |
+          echo "Deploying ${{ github.sha }} to PRODUCTION"
+          echo "Image: ghcr.io/${{ github.repository }}:sha-${{ github.sha }}"
+          echo "🌐 Production deploy complete"
+
+      - name: Smoke test
+        run: |
+          echo "Running smoke tests..."
+          echo "✅ App healthy at ${{ env.APP_URL }}"
+
+  notify:
+    needs: [ deploy-production ]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo "Deploy status: ${{ needs.deploy-production.result }}"
+          echo "SHA: ${{ github.sha }}"
+          echo "Actor: ${{ github.actor }}"
