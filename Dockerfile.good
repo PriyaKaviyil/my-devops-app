@@ -1,0 +1,43 @@
+# Stage 1: Install dependencies
+FROM node:20-alpine AS deps
+WORKDIR /app
+COPY package*.json ./          
+#step 1: package files
+RUN npm ci --only=production   
+#step 2: install (cached!)
+
+# Stage 2: Lean runtime image
+FROM node:20-alpine AS runtime
+WORKDIR /app
+
+# Non-root user
+RUN addgroup -S appgroup && \
+    adduser  -S appuser -G appgroup
+
+# Copy from builder stage with ownership
+COPY --from=deps \
+     --chown=appuser:appgroup \
+     /app/node_modules ./node_modules
+
+COPY --chown=appuser:appgroup src/ ./src/
+
+USER appuser
+EXPOSE 3000
+CMD ["node", "src/index.js"]     
+#exec form!
+
+# Build and measure:
+# time docker build -t app:good -f Dockerfile.good .
+# docker images app:good
+# → SIZE: ~80 MB (14× smaller!)
+# → Build time cold: ~30 seconds
+#
+# Change src/index.js, rebuild:
+# → COPY package*.json: CACHED ✓
+# → RUN npm ci: CACHED ✓
+# → COPY src/: rebuilds (2 sec)
+# → Total: ~3 seconds!
+#
+# Verify non-root:
+# docker run -d --name test app:good
+# docker exec test whoami → appuser
