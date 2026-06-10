@@ -6,7 +6,7 @@ on:
 
 env:
   
-  IMAGE: \ghcr.io/priyakaviyil/my-devops-app
+  IMAGE: ghcr.io/priyakaviyil/my-devops-app
   
 
 jobs:
